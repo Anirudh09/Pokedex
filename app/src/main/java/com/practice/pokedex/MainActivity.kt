@@ -8,12 +8,12 @@ import com.practice.pokedex.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var mainViewModel: PokemonViewModel
+    lateinit var pokemonViewModel: PokemonViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mainViewModel = ViewModelProvider(this).get(PokemonViewModel::class.java)
-        binding.viewModel = mainViewModel
+        pokemonViewModel = ViewModelProvider(this).get(PokemonViewModel::class.java)
+        binding.pokemonView = pokemonViewModel
         binding.lifecycleOwner = this
     }
 }
