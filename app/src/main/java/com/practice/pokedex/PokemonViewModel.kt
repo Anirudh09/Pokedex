@@ -34,7 +34,7 @@ class PokemonView(mainActivity: MainActivity, recyclerViewForPokemons: RecyclerV
         getPokemonList(recyclerViewForPokemons, mainActivity)
     }
 
-    private fun onListItemClick(position: Int, mainActivity: MainActivity, pokemonList: List<PokemonDataClass>) {
+    fun onListItemClick(position: Int, mainActivity: MainActivity, pokemonList: List<PokemonDataClass>) {
         Toast.makeText(mainActivity, pokemonList[position].name, Toast.LENGTH_SHORT).show()
     }
 
@@ -46,9 +46,9 @@ class PokemonView(mainActivity: MainActivity, recyclerViewForPokemons: RecyclerV
                 val pokemonAdapter = PokemonAdapter() {
                         position -> onListItemClick(position, mainActivity, pokemons.results)
                 }
-                val layoutManager = LinearLayoutManager(mainActivity, LinearLayoutManager.VERTICAL, false)
                 recyclerViewForPokemons.adapter = pokemonAdapter
-                recyclerViewForPokemons.addOnScrollListener(OnScrollListener(layoutManager, pokemonAdapter))
+                recyclerViewForPokemons.addOnScrollListener(OnScrollListener(pokemonAdapter,
+                                                            pokemons))
                 Log.d("pokemonapi", pokemons.toString())
             } catch (e: Exception) {
                 Log.d("pokemonapi", "Failure: ${e.message}")

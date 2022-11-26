@@ -22,7 +22,9 @@ private val retrofit = Retrofit.Builder()
 interface PokemonApiService {
     /*@GET("pokemon-species")*/
     @GET("{endpoint}")
-    suspend fun getPokemons(@Path("endpoint") endpoint: String, @Query("offset") offset: String = "", @Query("limit") limit: String = ""): PokemonListClass
+    suspend fun getPokemons(@Path("endpoint") endpoint: String,
+                            @Query("offset") offset: String? = "",
+                            @Query("limit") limit: String? = ""): PokemonListClass
 }
 
 object PokemonApi {

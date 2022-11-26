@@ -1,9 +1,9 @@
 package com.practice.pokedex
 
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practice.pokedex.databinding.PokemonListBinding
 import kotlinx.coroutines.CoroutineScope
@@ -27,46 +27,29 @@ class PokemonAdapter(private val onItemClicked: (position: Int) -> Unit): Recycl
     override fun getItemCount(): Int = pokemonList.size
 }
 
-class OnScrollListener(val layoutManager: LinearLayoutManager,
-                       val adapter: RecyclerView.Adapter<PokemonViewModel>) : RecyclerView.OnScrollListener() {
-    var previousTotal = 0
+class OnScrollListener(val adapter: RecyclerView.Adapter<PokemonViewModel>,
+                       val pokemons: PokemonListClass) : RecyclerView.OnScrollListener() {
     var loading = true
-    val visibleThreshold = 10
-    var firstVisibleItem = 0
-    var visibleItemCount = 0
-    var totalItemCount = 0
+    var updatePokemons = pokemons
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-//        visibleItemCount = recyclerView.childCount
-//        totalItemCount = layoutManager.itemCount
-//        firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
-
-//        if (loading) {
-//            if (totalItemCount > previousTotal) {
-//                loading = false
-//                previousTotal = totalItemCount
-//            }
-//        }
-
-//        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold))
-//            getNextPokemonList(adapter)
         if (!recyclerView.canScrollVertically(1)) {
-            getNextPokemonList(adapter)
+            getNextPokemonList(adapter, updatePokemons.next)
         }
-        /*Log.d("slice", pokemonList.next.slice(BASE_URL.length until pokemonList.next.length))*/
     }
 
-    fun getNextPokemonList(adapter: RecyclerView.Adapter<PokemonViewModel>){
+    fun getNextPokemonList(adapter: RecyclerView.Adapter<PokemonViewModel>,
+                           nextSetofPokemonsUrl: String){
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                val pokemons = PokemonApi.retrofitService().getPokemons("pokemon-species", "20", "20")
+                val uri: Uri = Uri.parse(nextSetofPokemonsUrl)
+                val pokemons = PokemonApi.retrofitService().getPokemons("pokemon-species", uri.getQueryParameter("offset"), uri.getQueryParameter("limit"))
                 Log.d("pokemonapiscroll", pokemons.toString() + "\ncurrent count: " + adapter.getItemCount())
                 pokemonList = pokemonList + pokemons.results
                 adapter.notifyDataSetChanged()
-//                pokemonListItems.addAll(pokemons.results)
-                loading = true
+                updatePokemons = pokemons
             } catch (e: Exception) {
                 Log.d("pokemonapiscroll", "Failure: ${e.message}")
             }
