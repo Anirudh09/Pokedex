@@ -44,7 +44,7 @@ class PokemonView(mainActivity: MainActivity, recyclerViewForPokemons: RecyclerV
                 val pokemons = PokemonApi.retrofitService().getPokemons("pokemon-species")
                 pokemonList = pokemons.results
                 val pokemonAdapter = PokemonAdapter() {
-                        position -> onListItemClick(position, mainActivity, pokemons.results)
+                        position -> onListItemClick(position, mainActivity, pokemonList)
                 }
                 recyclerViewForPokemons.adapter = pokemonAdapter
                 recyclerViewForPokemons.addOnScrollListener(OnScrollListener(pokemonAdapter,
