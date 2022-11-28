@@ -4,6 +4,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -19,12 +20,16 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
+
 interface PokemonApiService {
     /*@GET("pokemon-species")*/
     @GET("{endpoint}")
     suspend fun getPokemons(@Path("endpoint") endpoint: String,
                             @Query("offset") offset: String? = "",
                             @Query("limit") limit: String? = ""): PokemonListClass
+    @GET("{endpoint}/{pokemonName}")
+    suspend fun getPokemonInfo(@Path("endpoint") endpoint: String?,
+                               @Path("pokemonName") pokemonName: String?): PokemonSpritesList
 }
 
 object PokemonApi {

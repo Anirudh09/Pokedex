@@ -29,7 +29,6 @@ class PokemonAdapter(private val onItemClicked: (position: Int) -> Unit): Recycl
 
 class OnScrollListener(val adapter: RecyclerView.Adapter<PokemonViewModel>,
                        val pokemons: PokemonListClass) : RecyclerView.OnScrollListener() {
-    var loading = true
     var updatePokemons = pokemons
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
